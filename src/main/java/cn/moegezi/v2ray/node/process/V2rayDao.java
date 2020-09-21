@@ -38,7 +38,7 @@ public class V2rayDao {
 
     // 1. 记录流量日志
     public void trafficLog(List<UserTrafficLog> traffic) {
-        long num = 0;
+        /*long num = 0;
         Object[][] param = new Object[traffic.size()][6];
         for (int i = 0; i < param.length; i++) {
             UserTrafficLog t = traffic.get(i);
@@ -56,10 +56,12 @@ public class V2rayDao {
         } catch (SQLException e) {
             logger.error("记录流量日志异常", e);
         }
+        */
     }
 
     // 2. 记录用户流量信息
     public void updateUserTraffic(List<UserTrafficLog> list) {
+        */
         long t = System.currentTimeMillis() / 1000;
         StringBuilder ids = new StringBuilder();
         StringBuilder uSql = new StringBuilder();
@@ -77,10 +79,12 @@ public class V2rayDao {
         } catch (SQLException e) {
             logger.error("更新用户流量信息异常", e);
         }
+        */
     }
 
     // 3. 记录节点在线信息
     public void nodeOnlineLog(List<UserTrafficLog> list) {
+        */
         localCache.sweep();
         for (UserTrafficLog i : list) {
             localCache.put(i.getUserId());
@@ -91,6 +95,7 @@ public class V2rayDao {
         } catch (SQLException e) {
             logger.error("更新节点在线信息异常", e);
         }
+        */
     }
 
     // 4. 记录节点负载信息
