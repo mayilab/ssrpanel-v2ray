@@ -61,7 +61,7 @@ public class V2rayDao {
 
     // 2. 记录用户流量信息
     public void updateUserTraffic(List<UserTrafficLog> list) {
-        */
+        /*
         long t = System.currentTimeMillis() / 1000;
         StringBuilder ids = new StringBuilder();
         StringBuilder uSql = new StringBuilder();
@@ -84,7 +84,7 @@ public class V2rayDao {
 
     // 3. 记录节点在线信息
     public void nodeOnlineLog(List<UserTrafficLog> list) {
-        */
+        /*
         localCache.sweep();
         for (UserTrafficLog i : list) {
             localCache.put(i.getUserId());
