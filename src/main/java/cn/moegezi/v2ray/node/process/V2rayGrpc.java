@@ -145,6 +145,11 @@ public class V2rayGrpc {
                                 .toByteString())
                         .build())
                 .build();
+            try {
+            handlerService.alterInbound(req);
+        } catch (StatusRuntimeException e) {
+            logger.error("添加用户失败" + e);
+        }
             
         }else{
         AlterInboundRequest req = AlterInboundRequest
@@ -177,12 +182,13 @@ public class V2rayGrpc {
                                 .toByteString())
                         .build())
                 .build();
-        }
-        try {
+            try {
             handlerService.alterInbound(req);
         } catch (StatusRuntimeException e) {
             logger.error("添加用户失败" + e);
         }
+        }
+        
     }
 
     // 删除用户
