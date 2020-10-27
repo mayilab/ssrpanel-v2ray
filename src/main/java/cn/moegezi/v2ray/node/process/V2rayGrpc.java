@@ -28,7 +28,7 @@ public class V2rayGrpc {
     private final String v2rayTag = ConfigUtil.getString("v2ray.tag");
     private final Integer alterId = ConfigUtil.getInteger("v2ray.alter-id");
     private final Integer level = ConfigUtil.getInteger("v2ray.level");
-
+    private final String type = ConfigUtil.getString("v2ray.type");
     private static final String UplinkFormat = "user>>>%s>>>traffic>>>uplink";
     private static final String DownlinkFormat = "user>>>%s>>>traffic>>>downlink";
 
@@ -114,6 +114,7 @@ public class V2rayGrpc {
     // 添加用户
     private void addUser(UserModel userModel) {
         HandlerServiceGrpc.HandlerServiceBlockingStub handlerService = HandlerServiceGrpc.newBlockingStub(channel);
+        if(type=="vless"){
         AlterInboundRequest req = AlterInboundRequest
                 .newBuilder()
                 .setTag(v2rayTag)
@@ -144,6 +145,40 @@ public class V2rayGrpc {
                                 .toByteString())
                         .build())
                 .build();
+        }else {
+        AlterInboundRequest req = AlterInboundRequest
+                .newBuilder()
+                .setTag(v2rayTag)
+                .setOperation(TypedMessage
+                        .newBuilder()
+                        .setType(AddUserOperation.getDescriptor().getFullName())
+                        .setValue(AddUserOperation
+                                .newBuilder()
+                                .setUser(User
+                                        .newBuilder()
+                                        .setLevel(level)
+                                        .setEmail(userModel.getEmail())
+                                        .setAccount(TypedMessage
+                                                .newBuilder()
+                                                .setType(com.v2ray.core.proxy.vmess.Account.getDescriptor().getFullName())
+                                                .setValue(com.v2ray.core.proxy.vmess.Account
+                                                        .newBuilder()
+                                                        .setId(userModel.getVmessId())
+                                                        .setAlterId(alterId)
+                                                        .setSecuritySettings(SecurityConfig
+                                                                .newBuilder()
+                                                                .build())
+                                                        .build()
+                                                        .toByteString())
+                                                .build())
+                                        .build())
+                                .build()
+                                .toByteString())
+                        .build())
+                .build();
+        
+        
+        }
         try {
             handlerService.alterInbound(req);
         } catch (StatusRuntimeException e) {
