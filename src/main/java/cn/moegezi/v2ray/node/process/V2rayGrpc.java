@@ -131,8 +131,8 @@ public class V2rayGrpc {
                                         .setEmail(userModel.getEmail())
                                         .setAccount(TypedMessage
                                                 .newBuilder()
-                                                .setType(com.v2ray.core.proxy.vmess.Account.getDescriptor().getFullName())
-                                                .setValue(com.v2ray.core.proxy.vmess.Account
+                                                .setType(com.v2ray.core.proxy.vless.Account.getDescriptor().getFullName())
+                                                .setValue(com.v2ray.core.proxy.vless.Account
                                                         .newBuilder()
                                                         .setId(userModel.getVmessId())
                                                         .setFlow (flow)
