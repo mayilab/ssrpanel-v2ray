@@ -114,7 +114,6 @@ public class V2rayGrpc {
     // 添加用户
     private void addUser(UserModel userModel) {
         HandlerServiceGrpc.HandlerServiceBlockingStub handlerService = HandlerServiceGrpc.newBlockingStub(channel);
-        if(type=="vless"){
         AlterInboundRequest req = AlterInboundRequest
                 .newBuilder()
                 .setTag(v2rayTag)
@@ -145,40 +144,6 @@ public class V2rayGrpc {
                                 .toByteString())
                         .build())
                 .build();
-        }else {
-        AlterInboundRequest req = AlterInboundRequest
-                .newBuilder()
-                .setTag(v2rayTag)
-                .setOperation(TypedMessage
-                        .newBuilder()
-                        .setType(AddUserOperation.getDescriptor().getFullName())
-                        .setValue(AddUserOperation
-                                .newBuilder()
-                                .setUser(User
-                                        .newBuilder()
-                                        .setLevel(level)
-                                        .setEmail(userModel.getEmail())
-                                        .setAccount(TypedMessage
-                                                .newBuilder()
-                                                .setType(com.v2ray.core.proxy.vmess.Account.getDescriptor().getFullName())
-                                                .setValue(com.v2ray.core.proxy.vmess.Account
-                                                        .newBuilder()
-                                                        .setId(userModel.getVmessId())
-                                                        .setAlterId(alterId)
-                                                        .setSecuritySettings(SecurityConfig
-                                                                .newBuilder()
-                                                                .build())
-                                                        .build()
-                                                        .toByteString())
-                                                .build())
-                                        .build())
-                                .build()
-                                .toByteString())
-                        .build())
-                .build();
-        
-        
-        }
         try {
             handlerService.alterInbound(req);
         } catch (StatusRuntimeException e) {
