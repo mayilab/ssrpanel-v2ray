@@ -116,42 +116,6 @@ public class V2rayGrpc {
     // 添加用户
     private void addUser(UserModel userModel) {
         HandlerServiceGrpc.HandlerServiceBlockingStub handlerService = HandlerServiceGrpc.newBlockingStub(channel);
-        if(type=="vless"){
-            AlterInboundRequest req = AlterInboundRequest
-                .newBuilder()
-                .setTag(v2rayTag)
-                .setOperation(TypedMessage
-                        .newBuilder()
-                        .setType(AddUserOperation.getDescriptor().getFullName())
-                        .setValue(AddUserOperation
-                                .newBuilder()
-                                .setUser(User
-                                        .newBuilder()
-                                        .setLevel(level)
-                                        .setEmail(userModel.getEmail())
-                                        .setAccount(TypedMessage
-                                                .newBuilder()
-                                                .setType(com.v2ray.core.proxy.vless.Account.getDescriptor().getFullName())
-                                                .setValue(com.v2ray.core.proxy.vless.Account
-                                                        .newBuilder()
-                                                        .setId(userModel.getVmessId())
-                                                        .setFlow (flow)
-                                                        .setEncryption(encryption)
-                                                        .build()
-                                                        .toByteString())
-                                                .build())
-                                        .build())
-                                .build()
-                                .toByteString())
-                        .build())
-                .build();
-            try {
-            handlerService.alterInbound(req);
-        } catch (StatusRuntimeException e) {
-            logger.error("添加用户失败" + e);
-        }
-            
-        }else{
         AlterInboundRequest req = AlterInboundRequest
                 .newBuilder()
                 .setTag(v2rayTag)
@@ -187,8 +151,44 @@ public class V2rayGrpc {
         } catch (StatusRuntimeException e) {
             logger.error("添加用户失败" + e);
         }
+    }
+ // 添加用户
+    private void addUser(UserModel userModel) {
+        HandlerServiceGrpc.HandlerServiceBlockingStub handlerService = HandlerServiceGrpc.newBlockingStub(channel);
+            AlterInboundRequest req = AlterInboundRequest
+                .newBuilder()
+                .setTag(v2rayTag)
+                .setOperation(TypedMessage
+                        .newBuilder()
+                        .setType(AddUserOperation.getDescriptor().getFullName())
+                        .setValue(AddUserOperation
+                                .newBuilder()
+                                .setUser(User
+                                        .newBuilder()
+                                        .setLevel(level)
+                                        .setEmail(userModel.getEmail())
+                                        .setAccount(TypedMessage
+                                                .newBuilder()
+                                                .setType(com.v2ray.core.proxy.vless.Account.getDescriptor().getFullName())
+                                                .setValue(com.v2ray.core.proxy.vless.Account
+                                                        .newBuilder()
+                                                        .setId(userModel.getVmessId())
+                                                        .setFlow (flow)
+                                                        .setEncryption(encryption)
+                                                        .build()
+                                                        .toByteString())
+                                                .build())
+                                        .build())
+                                .build()
+                                .toByteString())
+                        .build())
+                .build();
+            try {
+            handlerService.alterInbound(req);
+        } catch (StatusRuntimeException e) {
+            logger.error("添加用户失败" + e);
         }
-        
+      
     }
 
     // 删除用户
