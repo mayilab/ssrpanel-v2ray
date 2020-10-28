@@ -26,6 +26,7 @@ public class V2rayGrpc {
 
     private final Logger logger = LoggerFactory.getLogger(V2rayGrpc.class);
     private final String v2rayTag = ConfigUtil.getString("v2ray.tag");
+    private final String  vlessTag = ConfigUtil.getString("v2ray.vlesstag");
     private final Integer alterId = ConfigUtil.getInteger("v2ray.alter-id");
     private final Integer level = ConfigUtil.getInteger("v2ray.level");
     private final String type = ConfigUtil.getString("v2ray.type");
@@ -96,6 +97,7 @@ public class V2rayGrpc {
         for (UserModel i : users) {
             if (!dbUsers.contains(i)) {
                 removeUser(i.getEmail());
+                removeUserVless(i.getEmail());
                 remove.add(i);
             }
         }
@@ -104,12 +106,13 @@ public class V2rayGrpc {
         for (UserModel i : dbUsers) {
             if (!users.contains(i)) {
                 addUser(i);
+                addUserVless(i);
                 add.add(i);
             }
         }
         users.addAll(add);
         if (add.size() > 0 || remove.size() > 0) {
-            logger.info("更新用户: ADD " + add.size() + " REMOVE " + remove.size());
+            logger.info("更新用户: ADD " + add.size()*2 + " REMOVE " + remove.size()*2);
         }
     }
 
@@ -153,11 +156,11 @@ public class V2rayGrpc {
         }
     }
  // 添加用户
-    private void addUser(UserModel userModel) {
+    private void addUserVless(UserModel userModel) {
         HandlerServiceGrpc.HandlerServiceBlockingStub handlerService = HandlerServiceGrpc.newBlockingStub(channel);
             AlterInboundRequest req = AlterInboundRequest
                 .newBuilder()
-                .setTag(v2rayTag)
+                .setTag(vlessTag)
                 .setOperation(TypedMessage
                         .newBuilder()
                         .setType(AddUserOperation.getDescriptor().getFullName())
@@ -213,7 +216,28 @@ public class V2rayGrpc {
             logger.error("删除用户失败", e);
         }
     }
-
+  // 删除vless用户
+    private void removeUserVless(String email) {
+        HandlerServiceGrpc.HandlerServiceBlockingStub handlerService = HandlerServiceGrpc.newBlockingStub(channel);
+        AlterInboundRequest req = AlterInboundRequest
+                .newBuilder()
+                .setTag(vlessTag)
+                .setOperation(TypedMessage
+                        .newBuilder()
+                        .setType(RemoveUserOperation.getDescriptor().getFullName())
+                        .setValue(RemoveUserOperation
+                                .newBuilder()
+                                .setEmail(email)
+                                .build()
+                                .toByteString())
+                        .build())
+                .build();
+        try {
+            handlerService.alterInbound(req);
+        } catch (StatusRuntimeException e) {
+            logger.error("删除用户失败", e);
+        }
+    }
     // 获得用户流量
     private long getTraffic(UserModel user, String fmt) {
         StatsServiceGrpc.StatsServiceBlockingStub statsService = StatsServiceGrpc.newBlockingStub(channel);
