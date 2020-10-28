@@ -11,7 +11,7 @@ import java.io.File;
 
 public class V2rayUpdate {
 
-    private static final String GITHUB_API = "https://api.github.com/repos/mayilab/v2ray-core/releases/latest";
+    private static final String GITHUB_API = "https://api.github.com/repos/mayilab/ssrpanel-v2ray/releases/latest";
 
     private static V2rayUpdate instance;
 
