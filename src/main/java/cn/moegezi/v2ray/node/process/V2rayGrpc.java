@@ -29,7 +29,6 @@ public class V2rayGrpc {
     private final String  vlessTag = ConfigUtil.getString("v2ray.vlesstag");
     private final Integer alterId = ConfigUtil.getInteger("v2ray.alter-id");
     private final Integer level = ConfigUtil.getInteger("v2ray.level");
-    private final String type = ConfigUtil.getString("v2ray.type");
     private final String flow  = ConfigUtil.getString("v2ray.flow");
     private final String encryption = ConfigUtil.getString("v2ray.encryption");
     private static final String UplinkFormat = "user>>>%s>>>traffic>>>uplink";
