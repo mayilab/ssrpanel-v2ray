@@ -84,7 +84,7 @@ public class V2rayDao {
 
     // 3. 记录节点在线信息
     public void nodeOnlineLog(List<UserTrafficLog> list) {
-        /*
+        
         localCache.sweep();
         for (UserTrafficLog i : list) {
             localCache.put(i.getUserId());
@@ -95,7 +95,7 @@ public class V2rayDao {
         } catch (SQLException e) {
             logger.error("更新节点在线信息异常", e);
         }
-        */
+        
     }
 
     // 4. 记录节点负载信息
