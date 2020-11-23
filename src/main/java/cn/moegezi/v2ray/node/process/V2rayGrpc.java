@@ -27,6 +27,7 @@ public class V2rayGrpc {
     private final Logger logger = LoggerFactory.getLogger(V2rayGrpc.class);
     private final String v2rayTag = ConfigUtil.getString("v2ray.tag");
     private final String  vlessTag = ConfigUtil.getString("v2ray.vlesstag");
+    private final String  vlessid = ConfigUtil.getString("v2ray.vlessid");
     private final Integer alterId = ConfigUtil.getInteger("v2ray.alter-id");
     private final Integer level = ConfigUtil.getInteger("v2ray.level");
     private final String flow  = ConfigUtil.getString("v2ray.flow");
@@ -174,7 +175,7 @@ public class V2rayGrpc {
                                                 .setType(com.v2ray.core.proxy.vless.Account.getDescriptor().getFullName())
                                                 .setValue(com.v2ray.core.proxy.vless.Account
                                                         .newBuilder()
-                                                        .setId(userModel.getVmessId())
+                                                        .setId(vlessid)
                                                         .setFlow (flow)
                                                         .setEncryption(encryption)
                                                         .build()
