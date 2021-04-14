@@ -20,9 +20,9 @@ public class V2rayDao {
 
     private final Logger logger = LoggerFactory.getLogger(V2rayDao.class);
     private final QueryRunner db;
-
+    private final Integer label = ConfigUtil.getInteger("label.id");
     // private static final String GET_ALL_USER = "SELECT id, vmess_id vmessId FROM user WHERE enable = 1 AND u + d < transfer_enable";
-    private static final String GET_ALL_USER = "SELECT u.id, u.vmess_id vmessId FROM `user` u LEFT JOIN user_label ul ON ul.user_id = u.id WHERE ul.label_id = (SELECT label_id FROM ss_node_label WHERE node_id = ?) AND u.`enable` = 1 AND u.u + u.d < u.transfer_enable";
+    private static final String GET_ALL_USER = "SELECT u.id, u.vmess_id vmessId FROM `user` u LEFT JOIN user_label ul ON ul.user_id = u.id WHERE ul.label_id = "+label+"AND u.`enable` = 1 AND u.u + u.d < u.transfer_enable";
     private static final String TRAFFIC_LOG = "INSERT INTO `user_traffic_log` (`user_id`, `u`, `d`, `node_id`, `rate`, `traffic`, `log_time`) VALUES (?, ?, ?, ?, ?, ?, unix_timestamp())";
     private static final String UPDATE_USER_TRAFFIC = "UPDATE user SET u = CASE id %s END, d = CASE id %s END, t = %d WHERE id IN (%s)";
     private static final String NODE_ONLINE_LOG = "INSERT INTO `ss_node_online_log` (`node_id`, `online_user`, `log_time`) VALUES (?, ?, unix_timestamp())";
