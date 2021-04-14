@@ -26,12 +26,9 @@ public class V2rayGrpc {
 
     private final Logger logger = LoggerFactory.getLogger(V2rayGrpc.class);
     private final String v2rayTag = ConfigUtil.getString("v2ray.tag");
-    private final String  vlessTag = ConfigUtil.getString("v2ray.vlesstag");
-    private final String  vlessid = ConfigUtil.getString("v2ray.vlessid");
     private final Integer alterId = ConfigUtil.getInteger("v2ray.alter-id");
     private final Integer level = ConfigUtil.getInteger("v2ray.level");
     private final String flow  = ConfigUtil.getString("v2ray.flow");
-    private final String encryption = ConfigUtil.getString("v2ray.encryption");
     private static final String UplinkFormat = "user>>>%s>>>traffic>>>uplink";
     private static final String DownlinkFormat = "user>>>%s>>>traffic>>>downlink";
 
@@ -97,7 +94,6 @@ public class V2rayGrpc {
         for (UserModel i : users) {
             if (!dbUsers.contains(i)) {
                 removeUser(i.getEmail());
-                removeUserVless(i.getEmail());
                 remove.add(i);
             }
         }
@@ -106,7 +102,6 @@ public class V2rayGrpc {
         for (UserModel i : dbUsers) {
             if (!users.contains(i)) {
                 addUser(i);
-                addUserVless(i);
                 add.add(i);
             }
         }
@@ -155,44 +150,7 @@ public class V2rayGrpc {
             logger.error("添加用户失败" + e);
         }
     }
- // 添加用户
-    private void addUserVless(UserModel userModel) {
-        HandlerServiceGrpc.HandlerServiceBlockingStub handlerService = HandlerServiceGrpc.newBlockingStub(channel);
-            AlterInboundRequest req = AlterInboundRequest
-                .newBuilder()
-                .setTag(vlessTag)
-                .setOperation(TypedMessage
-                        .newBuilder()
-                        .setType(AddUserOperation.getDescriptor().getFullName())
-                        .setValue(AddUserOperation
-                                .newBuilder()
-                                .setUser(User
-                                        .newBuilder()
-                                        .setLevel(level)
-                                        .setEmail(userModel.getEmail())
-                                        .setAccount(TypedMessage
-                                                .newBuilder()
-                                                .setType(com.v2ray.core.proxy.vless.Account.getDescriptor().getFullName())
-                                                .setValue(com.v2ray.core.proxy.vless.Account
-                                                        .newBuilder()
-                                                        .setId(vlessid)
-                                                        .setFlow (flow)
-                                                        .setEncryption(encryption)
-                                                        .build()
-                                                        .toByteString())
-                                                .build())
-                                        .build())
-                                .build()
-                                .toByteString())
-                        .build())
-                .build();
-            try {
-            handlerService.alterInbound(req);
-        } catch (StatusRuntimeException e) {
-            logger.error("添加用户失败" + e);
-        }
-      
-    }
+ 
 
     // 删除用户
     private void removeUser(String email) {
@@ -216,28 +174,7 @@ public class V2rayGrpc {
             logger.error("删除用户失败", e);
         }
     }
-  // 删除vless用户
-    private void removeUserVless(String email) {
-        HandlerServiceGrpc.HandlerServiceBlockingStub handlerService = HandlerServiceGrpc.newBlockingStub(channel);
-        AlterInboundRequest req = AlterInboundRequest
-                .newBuilder()
-                .setTag(vlessTag)
-                .setOperation(TypedMessage
-                        .newBuilder()
-                        .setType(RemoveUserOperation.getDescriptor().getFullName())
-                        .setValue(RemoveUserOperation
-                                .newBuilder()
-                                .setEmail(email)
-                                .build()
-                                .toByteString())
-                        .build())
-                .build();
-        try {
-            handlerService.alterInbound(req);
-        } catch (StatusRuntimeException e) {
-            logger.error("删除用户失败", e);
-        }
-    }
+
     // 获得用户流量
     private long getTraffic(UserModel user, String fmt) {
         StatsServiceGrpc.StatsServiceBlockingStub statsService = StatsServiceGrpc.newBlockingStub(channel);
